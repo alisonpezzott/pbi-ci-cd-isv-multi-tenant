@@ -20,18 +20,6 @@ on:
         options: 
         - dev   
         - tst 
-      workspace:
-        type: string
-        required: true
-        default: 'SalesSense'
-      capacity:
-        type: string
-        required: false
-        default: ''
-      admin_upns:
-        type: string
-        required: false
-        default: ''
   
 env:        
   # If its running on schedule deploys to PRD, otherwise goes to DEV

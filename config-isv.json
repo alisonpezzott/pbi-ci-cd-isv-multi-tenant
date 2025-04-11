@@ -1,6 +1,6 @@
 {
     "TENANT_A": {
-        "spnSecret": "TENANT_A",
+        "spnSecret": "ISV_TENANT_A",
         "capacity": "none",
         "workspace": "AdventureWorks_NorthAmerica",
         "adminUPNs": "9322eb4a-4132-4bd1-8df1-5cd3d1d2400b",
@@ -10,7 +10,7 @@
         }
     },
     "TENANT_B": {
-        "spnSecret": "TENANT_B",
+        "spnSecret": "ISV_TENANT_B",
         "capacity": "none",
         "workspace": "AdventureWorks_Europe",
         "adminUPNs": "9322eb4a-4132-4bd1-8df1-5cd3d1d2400b",
@@ -20,7 +20,7 @@
         }
     },
     "TENANT_C": {
-        "spnSecret": "TENANT_C",
+        "spnSecret": "ISV_TENANT_C",
         "capacity": "none",
         "workspace": "AdventureWorks_Oceania",
         "adminUPNs": "9322eb4a-4132-4bd1-8df1-5cd3d1d2400b",

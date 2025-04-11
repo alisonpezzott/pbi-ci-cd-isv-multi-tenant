@@ -59,8 +59,11 @@ def run_fab_command(
     result = subprocess.run(
         f"fab {command}",
         capture_output=capture_output,
-        text=True
+        text=True,
+        shell=True
     )
+
+
 
     if not (silently_continue) and (result.returncode > 0 or result.stderr):
         raise Exception(

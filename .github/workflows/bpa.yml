@@ -2,7 +2,7 @@ name: bpa
   
 on:
 
-  pull:
+  push:
     branches: 
       - staging      
     paths:

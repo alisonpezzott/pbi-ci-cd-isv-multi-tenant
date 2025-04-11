@@ -454,3 +454,18 @@ def deploy_item(
 
                             with open(file_path, "w", encoding="utf-8") as file:
                                 file.write(text)
+    if not what_if:
+        run_fab_command(
+            f"import -f /{workspace_name}.workspace/{item_name}.{item_type} -i {staging_path}"
+        )
+
+        # Return id after deployment
+
+        item_id = run_fab_command(
+            f"get /{workspace_name}.workspace/{item_name}.{item_type} -q id",
+            capture_output=True,
+        )
+
+        return item_id
+
+    print(f"::endgroup::")

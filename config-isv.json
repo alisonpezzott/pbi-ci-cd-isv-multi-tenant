@@ -22,7 +22,7 @@
     "TENANT_C": {
         "spnSecret": "TENANT_C",
         "capacity": "none",
-        "workspace": "AdventureWorks_Europe",
+        "workspace": "AdventureWorks_Oceania",
         "adminUPNs": "9322eb4a-4132-4bd1-8df1-5cd3d1d2400b",
         "semanticModelsParameters": {
             "SqlServerInstance": "BOOK-PROIJR07F2",

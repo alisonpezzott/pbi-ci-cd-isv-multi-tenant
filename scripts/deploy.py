@@ -4,7 +4,7 @@ import glob
 from utils import *
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--spn-auth", action="store_true", default=False)
+parser.add_argument("--spn-auth", action="store_true", default=True)
 parser.add_argument("--environment", default="dev")
 parser.add_argument("--config-file", default="./config.json")
 
@@ -27,7 +27,7 @@ workspace_name = configEnv["workspace"]
 admin_upns = configEnv.get("adminUPNs", "").split(",")
 semanticmodel_parameters = configEnv.get("semanticModelsParameters", None)
 server = semanticmodel_parameters.get("SqlServerInstance", None)
-database = semanticmodel_parameters.get("database", None)
+database = semanticmodel_parameters.get("SqlServerDatabase", None)
 
 # Authentication
 

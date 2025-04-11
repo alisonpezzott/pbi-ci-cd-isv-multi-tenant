@@ -1,0 +1,26 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBIDesktopVersion = 2.141.1451.0 (25.03)+5007b75f0f7edbed506e31fcb76584cd6d711788
+
+annotation PBI_QueryOrder = ["SqlServerInstance","SqlServerDatabase","Culture","Customer","Date","Product","Reseller","Sales","Sales Order","Sales Territory"]
+
+annotation PBI_ProTooling = ["DevMode","TMDL-Extension"]
+
+ref table Customer
+ref table Date
+ref table 'Sales Territory'
+ref table Product
+ref table 'Sales Order'
+ref table Sales
+ref table Reseller
+
+ref cultureInfo en-US
+

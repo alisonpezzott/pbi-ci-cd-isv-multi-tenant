@@ -1,0 +1,124 @@
+/// Filters the Sales table using sales order date
+table Date
+	lineageTag: 7fea8977-adde-4102-b83a-00ba63b0b143
+	dataCategory: Time
+
+	column DateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 92cc2100-9efd-462d-b712-b1278ee9802d
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: 8993c185-2358-4dc1-b21c-a475d75e841f
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Fiscal Year'
+		dataType: string
+		lineageTag: 59a7d56d-0d5f-4332-8355-23e15ef6b2b0
+		summarizeBy: none
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column 'Fiscal Quarter'
+		dataType: string
+		lineageTag: f6923d5e-b732-4340-b66b-75dffdb8d447
+		summarizeBy: none
+		sourceColumn: Fiscal Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column Month
+		dataType: string
+		lineageTag: 0c9d03db-cb66-4585-9df7-9d018ef79cb8
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: MonthKey
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column MonthKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0eedda72-c228-48aa-ae73-cce3d03d8e07
+		summarizeBy: none
+		sourceColumn: MonthKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Full Date'
+		dataType: string
+		lineageTag: 97de3ddc-897d-4912-b2e0-13648209266e
+		isDefaultLabel
+		summarizeBy: none
+		sourceColumn: Full Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	hierarchy Fiscal
+		lineageTag: 459abe8d-f6f6-4d5b-b9f4-a33b9cb21d1e
+
+		level Year
+			lineageTag: b49ac9b8-b4ea-4d78-b3b5-d39bab65d8e3
+			column: 'Fiscal Year'
+
+		level Quarter
+			lineageTag: f5847cf2-dee3-406f-aedb-03f4a42d192f
+			column: 'Fiscal Quarter'
+
+		level Month
+			lineageTag: 6b2d255f-b7e0-4978-baab-5fdbd662dc6c
+			column: Month
+
+		level Date
+			lineageTag: 4097d131-54cc-4eab-a023-a622810a58e3
+			column: 'Full Date'
+
+	partition Date-6302b3e1-4d31-40e4-b909-ba364d21aa87 = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database(SqlServerInstance, SqlServerDatabase),
+				    dbo_DimDate = Source{[Schema="dbo",Item="DimDate"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(dbo_DimDate,{"DateKey", "FullDateAlternateKey", "DayNumberOfMonth", "MonthNumberOfYear", "CalendarYear", "FiscalQuarter", "FiscalYear"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Other Columns",{{"FullDateAlternateKey", "Date"}, {"FiscalYear", "Fiscal Year"}}),
+				    #"Added FY Prefix" = Table.TransformColumns(#"Renamed Columns", {{"Fiscal Year", each "FY" & Text.From(_, "en-US"), type text}}),
+				    #"Added Fiscal Quarter" = Table.AddColumn(#"Added FY Prefix", "Fiscal Quarter", each [Fiscal Year] & " Q" & Number.ToText([FiscalQuarter])),
+				    #"Added Month" = Table.AddColumn(#"Added Fiscal Quarter", "Month", each (Number.ToText([CalendarYear]) & " " & Date.ToText([Date], "MMM", Culture)), type text),
+				    #"Added Full Date" = Table.AddColumn(#"Added Month", "Full Date", each [Month] & ", " & Text.PadStart(Number.ToText([DayNumberOfMonth]), 2, "0")),
+				    #"Added MonthKey" = Table.AddColumn(#"Added Full Date", "MonthKey", each ([CalendarYear] * 100) + [MonthNumberOfYear]),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Added MonthKey",{"DateKey", "Date", "Fiscal Year", "Fiscal Quarter", "Month", "Full Date", "MonthKey"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns1",{{"Fiscal Quarter", type text}, {"Month", type text}, {"Full Date", type text}, {"MonthKey", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -36,7 +36,7 @@ for key, value in config_environments:
     admin_upns = value.get("adminUPNs", "").split(",")
     semanticmodel_parameters = value.get("semanticModelsParameters", None)
     server = semanticmodel_parameters.get("SqlServerInstance", None)
-    database = semanticmodel_parameters.get("database", None)
+    database = semanticmodel_parameters.get("SqlServerDatabase", None)
 
 
     # Get SPN details from the environment variable and authenticate with the SPN details

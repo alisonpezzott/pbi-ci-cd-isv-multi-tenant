@@ -212,7 +212,7 @@ def deploy_report(
 
         report_definition["datasetReference"]["byConnection"] = by_connection_obj
 
-        with open(definition_path, "w") as file:
+        with open(definition_path, "w", encoding="utf-8") as file:
             json.dump(report_definition, file, indent=4)
     else:
         if not (
@@ -251,7 +251,7 @@ def deploy_report(
 
                 pages_json["activePageName"] = defaultPage
 
-                with open(os.path.join(staging_path, "definition", "pages", "pages.json"), "w") as file:
+                with open(os.path.join(staging_path, "definition", "pages", "pages.json"), "w", encoding="utf-8") as file:
                     json.dump(pages_json, file, indent=4)
             
     # Deploy report
@@ -318,7 +318,7 @@ def update_semanticmodel_definition(path, parameters: dict):
     file_path = os.path.join(path, "definition", "expressions.tmdl")
 
     if os.path.exists(file_path):
-        with open(file_path, "r") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             text = file.read()
 
     if text:
@@ -329,7 +329,7 @@ def update_semanticmodel_definition(path, parameters: dict):
 
             text = re.sub(rf'(expression\s+{key}\s*=\s*)(".*?")', rf'\1"{value}"', text)
 
-        with open(file_path, "w") as file:
+        with open(file_path, "w", encoding="utf-8") as file:
             file.write(text)
     else:
         raise Exception("Cannot find expressions.tmdl")
@@ -351,7 +351,7 @@ def read_platform_file(path):
     if not os.path.exists(platform_file_path):
         raise Exception(f"Cannot find .platform file: '{platform_file_path}'")
 
-    with open(platform_file_path, "r") as platform_file:
+    with open(platform_file_path, "r", encoding="utf-8") as platform_file:
         platform_data = json.load(platform_file)
 
         return platform_data
@@ -371,7 +371,7 @@ def read_pbip_jsonfile(path):
     if not os.path.exists(path):
         raise Exception(f"Cannot find file: '{path}'")
 
-    with open(path, "r") as file:
+    with open(path, "r", encoding="utf-8") as file:
         data = json.load(file)
 
     return data
@@ -412,7 +412,7 @@ def deploy_item(
 
     if os.path.exists(os.path.join(staging_path, ".platform")):
 
-        with open(os.path.join(staging_path, ".platform"), "r") as file:
+        with open(os.path.join(staging_path, ".platform"), "r", encoding="utf-8") as file:
             platform_data = json.load(file)
 
         if item_name is None:
@@ -430,7 +430,7 @@ def deploy_item(
 
                 file_path = os.path.join(root, file)
 
-                with open(file_path, "r") as file:
+                with open(file_path, "r", encoding="utf-8", errors='replace') as file:
                     text = file.read()
 
                 # Loop parameters and execute the find & replace in the ones that match the file path
@@ -452,5 +452,5 @@ def deploy_item(
                                 f"Find & replace in file '{file_path}' with regex '{find_and_replace_file_find}'"
                             )
 
-                            with open(file_path, "w") as file:
+                            with open(file_path, "w", encoding="utf-8") as file:
                                 file.write(text)

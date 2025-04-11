@@ -48,10 +48,6 @@ jobs:
           fab --version
           which fab
 
-      - name: Configure Fabric Settings
-        run: |
-          fab config set --name=fab_encryption_fallback_enabled --value=true
-
       - name: Run Deployment Script {Dev}        
         env:
           FABRIC_CLIENT_ID: ${{ secrets.FABRIC_CLIENT_ID }}
@@ -82,10 +78,6 @@ jobs:
           run: |
             fab --version
             which fab
-
-        - name: Configure Fabric Settings
-          run: |
-            fab config set --name=fab_encryption_fallback_enabled --value=true
 
         - name: Run Refresh Script
           env:

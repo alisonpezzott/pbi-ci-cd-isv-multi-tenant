@@ -23,9 +23,9 @@ on:
   
 env:        
   # If its running on schedule deploys to PRD, otherwise goes to DEV
-  environment: ${{ github.event.inputs.environment == '' && (github.event_name == 'schedule' && 'prd' || 'dev') || github.event.inputs.environment }}
+  environment: ${{ github.event.inputs.environment == '' && (github.event_name == 'dev' || 'tst') || github.event.inputs.environment }}
   workspace: ${{ github.event.inputs.workspace == '' && 'SalesSense' || github.event.inputs.workspace }}
-  capacity: ${{ github.event.inputs.capacity == '' && vars.FABRIC_CAPACITY || github.event.inputs.capacity }}
+  capacity: ${{ github.event.inputs.capacity || vars.FABRIC_CAPACITY }}
   admin_upns: ${{ github.event.inputs.admin_upns == '' && vars.FABRIC_ADMIN_UPNS || github.event.inputs.admin_upns }}  
 
 jobs:

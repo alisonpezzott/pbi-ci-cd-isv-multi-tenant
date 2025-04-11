@@ -28,7 +28,7 @@ config = read_pbip_jsonfile(args.config_file)
 configEnv = config[args.environment]
 
 # Use command-line arguments if provided, otherwise fallback to config values
-capacity_name = capacity_name or configEnv.get("capacity", "none")
+capacity_name = capacity_name or configEnv.get("capacity")
 workspace_name = workspace_name or configEnv["workspace"]
 admin_upns = admin_upns or configEnv.get("adminUPNs", "").split(",")
 

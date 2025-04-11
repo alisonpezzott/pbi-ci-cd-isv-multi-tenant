@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/1.2.0/schema.json",
   "themeCollection": {
     "baseTheme": {
-      "name": "CY19SU12",
-      "reportVersionAtImport": "5.10",
+      "name": "CY24SU10",
+      "reportVersionAtImport": "5.62",
       "type": "SharedResources"
     },
     "customTheme": {
@@ -34,8 +34,8 @@
       "type": "SharedResources",
       "items": [
         {
-          "name": "CY19SU12",
-          "path": "BaseThemes/CY19SU12.json",
+          "name": "CY24SU10",
+          "path": "BaseThemes/CY24SU10.json",
           "type": "BaseTheme"
         }
       ]

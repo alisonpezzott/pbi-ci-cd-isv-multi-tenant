@@ -1,0 +1,40 @@
+name: scenario02-deploy
+  
+on:
+
+  merge:
+    branches:
+      - main           
+    paths:
+      - '**/src/**'        
+
+  
+jobs:
+
+  tenantDeploy:
+    runs-on: ubuntu-latest
+    strategy:     
+      matrix:        
+        tenant: [TENANT_A, TENANT_B, TENANT_C]      
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.12"
+
+      - name: Install Fabric CLI
+        run: |
+          python -m pip install ms-fabric-cli
+
+      - name: Run Deployment Script
+        env:
+          # Maps the GitHub secret 'ISV_<TenantName>' to the 'ISV_<TenantName>' environment variable
+          ${{ format('ISV_{0}', matrix.tenant) }}: ${{ secrets[format('ISV_{0}', matrix.tenant)] }}
+        # Same python code for each tenant, but with different values for the 'tenant' argument  
+        run: |
+          python scripts/deploy-isv.py --config-file "./config-isv.json" --tenant ${{ matrix.tenant }}
+  

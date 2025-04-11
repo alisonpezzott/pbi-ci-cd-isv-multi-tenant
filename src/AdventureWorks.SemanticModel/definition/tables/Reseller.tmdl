@@ -1,0 +1,130 @@
+table Reseller
+	lineageTag: 3f87ddaa-9628-4b77-aa19-b491428e72e1
+
+	column ResellerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 53e9359c-61b9-4695-8611-872fa6e5abbc
+		summarizeBy: none
+		sourceColumn: ResellerKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Business Type'
+		dataType: string
+		lineageTag: b56d526d-d8e9-463c-9b5f-278a96677979
+		summarizeBy: none
+		sourceColumn: Business Type
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column Reseller
+		dataType: string
+		lineageTag: b650e544-8340-4699-b49b-f145106a9ba5
+		isDefaultLabel
+		summarizeBy: none
+		sourceColumn: Reseller
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column City
+		dataType: string
+		lineageTag: 9ba1cd52-b2ba-49c4-b77c-c928bb5a4391
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column State-Province
+		dataType: string
+		lineageTag: 3b4a216c-61db-4acb-ad47-abe82e3109e3
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: State-Province
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column Country-Region
+		dataType: string
+		lineageTag: 529ec1a5-805c-461e-989f-49bdcd942e85
+		dataCategory: County
+		summarizeBy: none
+		sourceColumn: Country-Region
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column 'Postal Code'
+		dataType: string
+		lineageTag: 467df93f-7437-4623-9cfe-c50a3a1be4a6
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: Postal Code
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column 'Reseller ID'
+		dataType: string
+		lineageTag: 88e4abc4-85f8-4662-adfe-d9bd1275bae9
+		summarizeBy: none
+		sourceColumn: Reseller ID
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	hierarchy Geography
+		lineageTag: c785050c-2390-4bed-a3f1-1dc2d4f6dd2b
+
+		level Country-Region
+			lineageTag: c883873c-75d3-4272-b88f-81c587085ac4
+			column: Country-Region
+
+		level State-Province
+			lineageTag: a992cbbe-434c-4083-95b9-7eec14ca4c7f
+			column: State-Province
+
+		level City
+			lineageTag: 857d95c6-5a76-45a9-b196-ea992b9d05a0
+			column: City
+
+		level 'Postal Code'
+			lineageTag: 1599adf5-e0e9-4a07-a0d6-b7be407886cc
+			column: 'Postal Code'
+
+		level Reseller
+			lineageTag: 58a837a2-5dd0-4c86-bcec-5658c9347cea
+			column: Reseller
+
+	partition Reseller-e44d0a71-e144-4c32-b1af-2f758a686c3c = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database(SqlServerInstance, SqlServerDatabase),
+				    dbo_DimReseller = Source{[Schema="dbo",Item="DimReseller"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(dbo_DimReseller,{"ResellerKey", "ResellerAlternateKey", "BusinessType", "ResellerName", "DimGeography"}),
+				    #"Expanded DimGeography" = Table.ExpandRecordColumn(#"Removed Other Columns", "DimGeography", {"City", "StateProvinceName", "EnglishCountryRegionName", "PostalCode"}, {"City", "StateProvinceName", "EnglishCountryRegionName", "PostalCode"}),
+				    #"Add NA Row" = Table.InsertRows(#"Expanded DimGeography", 0, {[ResellerKey = -1, ResellerAlternateKey = "[Not Applicable]", BusinessType = "[Not Applicable]", ResellerName = "[Not Applicable]", City = "[Not Applicable]", StateProvinceName ="[Not Applicable]", EnglishCountryRegionName ="[Not Applicable]", PostalCode ="[Not Applicable]"]}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Add NA Row",{{"ResellerAlternateKey", "Reseller ID"}, {"BusinessType", "Business Type"}, {"ResellerName", "Reseller"}, {"StateProvinceName", "State-Province"}, {"EnglishCountryRegionName", "Country-Region"}, {"PostalCode", "Postal Code"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

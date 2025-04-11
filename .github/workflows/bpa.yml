@@ -1,0 +1,27 @@
+name: bpa
+  
+on:
+
+  pull_request:
+    branches: 
+      - main      
+    paths:
+      - '**/src/*.Report/**'
+      - '**/src/*.SemanticModel/**'
+  
+  workflow_dispatch:
+        
+jobs:
+  
+  bpa:   
+    runs-on: windows-latest
+    
+    steps:
+        - name: Check out the code
+          uses: actions/checkout@v4
+
+        - name: Semantic Models
+          run: .\scripts\bpa-semanticmodel.ps1 -path "." -src "./src/*.SemanticModel"
+      
+        - name: Reports
+          run: .\scripts\bpa-report.ps1 -path "." -src "./src/*.Report"

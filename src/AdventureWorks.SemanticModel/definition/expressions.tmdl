@@ -1,0 +1,22 @@
+expression SqlServerInstance = "BOOK-PROIJR07F2" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: ab6f503f-7372-49c3-883d-1fd0e0bccb50
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+expression SqlServerDatabase = "AdventureWorksDW-PRD" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: f77fc3e1-e954-46f1-9674-ae7cb1414cb4
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Used to format month names in the Date query.
+expression Culture = "en-US" meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true]
+	lineageTag: 96330e66-116d-4b50-aa68-ddd29eb060dd
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

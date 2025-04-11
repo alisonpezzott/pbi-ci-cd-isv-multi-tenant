@@ -1,0 +1,140 @@
+table Product
+	lineageTag: 6c1a3a8f-ab57-488c-a459-f013240da3f7
+
+	measure TestProduct = COUNTROWS('Product')
+		formatString: 0.00
+		lineageTag: d86830a1-f6df-4599-b77b-b5300edc030d
+
+	column ProductKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b61dcfa2-e292-48be-be60-879b6465237c
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product
+		dataType: string
+		lineageTag: 32ee89ca-e68c-449d-a316-6c31a6d25fc3
+		isDefaultLabel
+		summarizeBy: none
+		sourceColumn: Product
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column 'Standard Cost'
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: c4b79e28-f97a-446e-8c02-747e2314a1a7
+		summarizeBy: none
+		sourceColumn: Standard Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column Color
+		dataType: string
+		lineageTag: da5a058b-87e1-4edd-b128-046a6a6d07ea
+		summarizeBy: none
+		sourceColumn: Color
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column 'List Price'
+		dataType: decimal
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: cf3c6430-6d94-4b20-b512-6795ef3ac654
+		summarizeBy: none
+		sourceColumn: List Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column Model
+		dataType: string
+		lineageTag: dd5c1984-8e29-4109-95df-53b1f6eb944b
+		summarizeBy: none
+		sourceColumn: Model
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column Subcategory
+		dataType: string
+		lineageTag: 7b41f34d-318b-48b4-b3fd-4275edf74bca
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	column Category
+		dataType: string
+		lineageTag: 34497bd0-f386-49e0-af98-11f7960d82ed
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	/// Stock-keeping unit
+	column SKU
+		dataType: string
+		lineageTag: ab36db5f-eebf-4335-97a5-1ca73d5ec358
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isText":true}
+
+	hierarchy Products
+		lineageTag: da0afabb-46f9-4318-a6e8-7a14ef24dd0e
+
+		level Category
+			lineageTag: bf813ea4-bc3c-4ee1-89aa-01c7b0fa8cfe
+			column: Category
+
+		level Subcategory
+			lineageTag: d618e7b8-6f8a-4033-b554-bd8f656353f9
+			column: Subcategory
+
+		level Model
+			lineageTag: 20db4331-fdae-4b8d-a221-e61e9b5a9ae0
+			column: Model
+
+		level Product
+			lineageTag: 925b7891-a867-498e-b705-a0698deb4c04
+			column: Product
+
+	partition Product-3d5e98b2-a997-4444-96bb-fe1718e2f2b8 = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database(SqlServerInstance, SqlServerDatabase),
+				    dbo_DimProduct = Source{[Schema="dbo",Item="DimProduct"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(dbo_DimProduct, each ([FinishedGoodsFlag] = true)),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"ProductKey", "ProductAlternateKey", "EnglishProductName", "StandardCost", "Color", "ListPrice", "ModelName", "DimProductSubcategory"}),
+				    #"Expanded DimProductSubcategory" = Table.ExpandRecordColumn(#"Removed Other Columns", "DimProductSubcategory", {"EnglishProductSubcategoryName", "DimProductCategory"}, {"EnglishProductSubcategoryName", "DimProductCategory"}),
+				    #"Expanded DimProductCategory" = Table.ExpandRecordColumn(#"Expanded DimProductSubcategory", "DimProductCategory", {"EnglishProductCategoryName"}, {"EnglishProductCategoryName"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Expanded DimProductCategory",{{"EnglishProductName", "Product"}, {"StandardCost", "Standard Cost"}, {"ListPrice", "List Price"}, {"ModelName", "Model"}, {"EnglishProductSubcategoryName", "Subcategory"}, {"EnglishProductCategoryName", "Category"}, {"ProductAlternateKey", "SKU"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,8 +1,8 @@
-name: scenario02-deploy
+name: deploy-isv
   
 on:
 
-  merge:
+  pull_request:
     branches:
       - main           
     paths:

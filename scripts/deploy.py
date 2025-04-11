@@ -7,6 +7,9 @@ parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFo
 parser.add_argument("--spn-auth", action="store_true", default=True)
 parser.add_argument("--environment", default="dev")
 parser.add_argument("--config-file", default="./config.json")
+parser.add_argument("--capacity", default=None, help="Capacity name")
+parser.add_argument("--workspace", default=None, help="Workspace name")
+parser.add_argument("--admin-upns", default=None, help="Comma-separated list of admin UPNs")
 
 args = parser.parse_args()
 
@@ -15,32 +18,32 @@ current_folder = os.path.dirname(current_file)
 src_folder = os.path.join(current_folder, "..", "src", "adventureworks")
 
 # Deployment parameters:
-
 spn_auth = args.spn_auth
 environment = args.environment
+capacity_name = args.capacity
+workspace_name = args.workspace
+admin_upns = args.admin_upns.split(",") if args.admin_upns else []
 
 config = read_pbip_jsonfile(args.config_file)
 configEnv = config[args.environment]
 
-capacity_name = configEnv.get("capacity", "none")
-workspace_name = configEnv["workspace"]
-admin_upns = configEnv.get("adminUPNs", "").split(",")
+# Use command-line arguments if provided, otherwise fallback to config values
+capacity_name = capacity_name or configEnv.get("capacity", "none")
+workspace_name = workspace_name or configEnv["workspace"]
+admin_upns = admin_upns or configEnv.get("adminUPNs", "").split(",")
+
 semanticmodel_parameters = configEnv.get("semanticModelsParameters", None)
 server = semanticmodel_parameters.get("SqlServerInstance", None)
 database = semanticmodel_parameters.get("SqlServerDatabase", None)
 
 # Authentication
-
 if spn_auth:
     fab_authenticate_spn()
 
 # Ensure workspace exists
-
 workspace_id = create_workspace(workspace_name=workspace_name, capacity_name=capacity_name, upns=admin_upns)
 
-
 # Deploy semantic model
-
 semanticmodel_id = deploy_item(
     "src/AdventureWorks.SemanticModel",
     workspace_name=workspace_name,
@@ -56,11 +59,8 @@ semanticmodel_id = deploy_item(
     },
 )
 
-
 # Deploy reports
-
 for report_path in glob.glob("src/*.Report"):
-
     deploy_item(
         report_path,
         workspace_name=workspace_name,
@@ -83,6 +83,4 @@ for report_path in glob.glob("src/*.Report"):
         },
     )
 
-
 run_fab_command("auth logout")
-

@@ -2,7 +2,6 @@ name: deploy
   
 on:
 
-
   push:
     branches:
       - dev
@@ -19,11 +18,11 @@ on:
         default: 'dev'
         options: 
         - dev   
-        - tst 
+        - staging
   
 env:        
   # If its running on schedule deploys to PRD, otherwise goes to DEV
-  environment: ${{ github.event.inputs.environment == '' && (github.event_name == 'dev' || 'tst') || github.event.inputs.environment }} 
+  environment: ${{ github.event.inputs.environment == '' && (github.event_name == 'dev' || 'staging') || github.event.inputs.environment }} 
 
 jobs:
 

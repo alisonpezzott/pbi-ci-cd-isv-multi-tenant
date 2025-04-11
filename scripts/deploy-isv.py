@@ -50,7 +50,11 @@ for key, value in config_environments:
 
     spn_client_id, spn_client_secret, spn_tenant_id = spn_secret_raw.split('|', 2)    
 
-    fab_authenticate_spn(spn_client_id, spn_client_secret, spn_tenant_id)
+    os.environ["FABRIC_CLIENT_ID"] = spn_client_id
+    os.environ["FABRIC_CLIENT_SECRET"] = spn_client_secret
+    os.environ["FABRIC_TENANT_ID"] = spn_tenant_id
+
+    fab_authenticate_spn()
 
     # ensure workspace
 

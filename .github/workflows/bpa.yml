@@ -2,9 +2,9 @@ name: bpa
   
 on:
 
-  pull_request:
+  pull:
     branches: 
-      - main      
+      - staging      
     paths:
       - '**/src/*.Report/**'
       - '**/src/*.SemanticModel/**'

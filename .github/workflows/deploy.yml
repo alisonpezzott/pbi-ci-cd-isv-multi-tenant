@@ -1,7 +1,6 @@
 name: deploy
   
 on:
-
   push:
     branches:
       - dev
@@ -9,17 +8,17 @@ on:
       - main    
     paths:
       - '**/src/**'           
-    
+      
   workflow_dispatch:
-  inputs:
-    environment:
-      description: 'Choose the branch'
-      required: true
-      default: 'dev'
-      options:
-        - dev
-        - staging
-        - main
+    inputs:
+      environment:
+        description: 'Choose the branch'
+        required: true
+        default: 'dev'
+        options:
+          - dev
+          - staging
+          - main
     
 env:
   environment: ${{ github.event.inputs.environment != '' 
@@ -27,7 +26,6 @@ env:
       : github.ref_name }}
 
 jobs:
-
   deploy:    
     runs-on: ubuntu-latest
 
@@ -54,7 +52,4 @@ jobs:
           FABRIC_CLIENT_ID: ${{ secrets.FABRIC_CLIENT_ID }}
           FABRIC_CLIENT_SECRET: ${{ secrets.FABRIC_CLIENT_SECRET }}
           FABRIC_TENANT_ID: ${{ secrets.FABRIC_TENANT_ID }}          
-        run: 
-          python scripts/deploy.py --spn-auth --environment ${{ env.environment }}
-      
-  
+        run: python scripts/deploy.py --spn-auth --environment ${{ env.environment }}

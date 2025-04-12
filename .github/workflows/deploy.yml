@@ -12,9 +12,10 @@ on:
     
   workflow_dispatch:
     
-  
-env:        
-  environment: ${{ github.event.inputs.environment == '' && (github.event_name == 'dev' || 'staging' || 'main') || github.event.inputs.environment }} 
+env:
+  environment: ${{ github.event.inputs.environment != '' 
+      ? github.event.inputs.environment 
+      : github.ref_name }}
 
 jobs:
 
@@ -45,6 +46,6 @@ jobs:
           FABRIC_CLIENT_SECRET: ${{ secrets.FABRIC_CLIENT_SECRET }}
           FABRIC_TENANT_ID: ${{ secrets.FABRIC_TENANT_ID }}          
         run: 
-          python scripts/deploy.py --spn-auth 
+          python scripts/deploy.py --spn-auth --environment ${{ env.environment }}
       
   

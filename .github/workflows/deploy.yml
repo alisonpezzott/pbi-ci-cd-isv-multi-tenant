@@ -21,9 +21,7 @@ on:
           - main
     
 env:
-  environment: ${{ github.event.inputs.environment != '' 
-      ? github.event.inputs.environment 
-      : github.ref_name }}
+  environment: ${{ github.event.inputs.environment != '' ? github.event.inputs.environment : github.ref_name }}
 
 jobs:
   deploy:    

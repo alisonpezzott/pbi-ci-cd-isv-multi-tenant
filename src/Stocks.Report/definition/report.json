@@ -7,7 +7,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "Polar_theme_for_Power_BI8737491415142301.json",
+      "name": "Nord_theme_for_Power_BI3718965866178009.json",
       "reportVersionAtImport": "5.62",
       "type": "RegisteredResources"
     }
@@ -45,8 +45,8 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "Polar_theme_for_Power_BI8737491415142301.json",
-          "path": "Polar_theme_for_Power_BI8737491415142301.json",
+          "name": "Nord_theme_for_Power_BI3718965866178009.json",
+          "path": "Nord_theme_for_Power_BI3718965866178009.json",
           "type": "CustomTheme"
         }
       ]

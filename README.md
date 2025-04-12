@@ -8,3 +8,4 @@ See here: https://learn.microsoft.com/en-us/fabric/cicd/manage-deployment
 
 ![CI/CD for ISVs in Fabric (managing multiple customers/solutions)](./assets/4_ci_cd_for_isv.png)
 
+
